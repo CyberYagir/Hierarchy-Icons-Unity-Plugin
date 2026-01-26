@@ -1,2 +1,0 @@
-# Hierarchy-Icons-Plugin
-
