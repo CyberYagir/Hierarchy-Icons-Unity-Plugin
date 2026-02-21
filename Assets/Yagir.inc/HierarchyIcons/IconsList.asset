@@ -12,41 +12,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e04f1c55518cb4cb036453b1403a03, type: 3}
   m_Name: IconsList
   m_EditorClassIdentifier: 
+  iconsCount: 1
   gameManagerIconFor:
   - manager
   - service
   - lifetimescope
   - context
   icons:
+  - HorizontalLayoutGroup
+  - Scrollbar
   - Camera
   - Rigidbody
+  - Animator
+  - Animation
   - MeshRenderer
+  - SkinnedMeshRenderer
+  - Canvas
+  - GraphicRaycaster
+  - CanvasGroup
+  - Button
+  - Text
+  - Mask
+  - Outline
+  - ScrollRect
+  - Image
+  - GridLayoutGroup
+  - VerticalLayoutGroup
   - CapsuleCollider
   - BoxCollider
   - SphereCollider
   - MeshCollider
-  - Canvas
-  - GraphicRaycaster
-  - CanvasGroup
-  - Text
-  - Outline
-  - Mask
-  - Image
-  - Button
-  - ScrollRect
-  - Scrollbar
   - ParticleSystem
   - ReflectionProbe
-  - Animator
-  - Animation
-  - SkinnedMeshRenderer
   - LineRenderer
   - TrailRenderer
   - EventSystem
   - SpriteRenderer
-  - GridLayoutGroup
-  - HorizontalLayoutGroup
-  - VerticalLayoutGroup
   - NavMeshSurface
   - NavMeshObstacle
   - NavMeshModifier

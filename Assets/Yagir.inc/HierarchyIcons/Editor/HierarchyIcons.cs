@@ -41,6 +41,7 @@ namespace Yagir.inc.HierarchyIcons.Editor
         }
 
         private static readonly Vector2 offset = new Vector2(18, 0);
+        private static readonly float multiIconStep = 18f;
 
         private static readonly Dictionary<string, GUIContent> iconsNames = new Dictionary<string, GUIContent>();
     
@@ -123,49 +124,56 @@ namespace Yagir.inc.HierarchyIcons.Editor
                 }
             }
         }
+        private static GUIContent GetCachedComponentIcon(Component cmp)
+        {
+            if (cmp == null) return null;
+
+            var t = cmp.GetType();
+            string key = t.FullName;
+
+            if (!iconsNames.TryGetValue(key, out var gc) || gc == null || gc.image == null)
+            {
+                gc = TypeIconCache.Get(t, cmp);
+                if (gc == null || gc.image == null) return null;
+
+                iconsNames[key] = gc;
+            }
+
+            return gc;
+        }
     
         static bool HasToken(string name, string token) => name.IndexOf(token, System.StringComparison.OrdinalIgnoreCase) >= 0;
 
-        private static void RepaintComponent(GameObject go,  Rect iconPos)
+        private static void RepaintComponent(GameObject go, Rect iconPos)
         {
-            for (int i = 0; i < list.icons.Count; i++)
+            int max = Mathf.Clamp(list.iconsCount, 1, 3);
+            int drawn = 0;
+
+            iconPos.size = Vector2.one * 20;
+            iconPos.position -= Vector2.down * 2.5f;
+            iconPos.position += Vector2.right * 2f;
+
+            for (int i = 0; i < list.icons.Count && drawn < max; i++)
             {
-                string type = list.icons[i];
-                var cmp = go.GetComponent(type);
-                
-                if (cmp && cmp is Folder == false)
-                {
-                    iconPos.size = Vector2.one * 20;
-                    iconPos.position -= Vector2.down * 2.5f;
-                    iconPos.position += Vector2.right * 2f;
+                string typeName = list.icons[i];
 
-                    string key = $"d_{list.icons[i]} Icon";
-                
-                    if (!iconsNames.TryGetValue(key, out var name))
-                    {
-                        var gui = TypeIconCache.Get(cmp.GetType(), cmp);
-                        if (gui == null) continue;
-                    
-                        GUIContent icon = gui;
+                var cmp = go.GetComponent(typeName);
+                if (!cmp) continue;
 
-                    
-                        iconsNames.Add(key, icon);
-                    }
-                    else
-                        GUI.Label(iconPos, name);
+                GUIContent icon = (cmp is Folder)
+                    ? FolderIcon
+                    : GetCachedComponentIcon(cmp);
 
-                    return;
-                }
-                else if (cmp is Folder)
-                {
-                    iconPos.size = Vector2.one * 20;
-                    iconPos.position -= Vector2.down * 2.5f;
-                    iconPos.position += Vector2.right * 2f;
-                    GUI.Label(iconPos, FolderIcon);
-                }
+                if (icon == null || icon.image == null) continue;
+
+                Rect r = iconPos;
+                r.position += Vector2.left * (multiIconStep * drawn);
+
+                GUI.Label(r, icon);
+                drawn++;
             }
         }
-
+        
         private static bool CreateSingleton()
         {
             if (list == null)
